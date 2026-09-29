@@ -11,6 +11,9 @@ const userSchema = new Schema(
     status: { type: String },
     member: { type: String },   
     points: { type: Number },
+    phone: { type: String },
+    bio: { type: String },
+    department: { type: String },
   },
   { timestamps: true, collection: "user" }
 );
