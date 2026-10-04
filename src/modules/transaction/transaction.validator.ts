@@ -10,7 +10,7 @@ export const getTransactionsQuerySchema = z.object({
   search: z.string().optional(),
   sort: z.enum(["newest", "oldest", "amount_asc", "amount_desc"]).optional(),
   page: z.coerce.number().int().min(1).default(1),
-  limit: z.coerce.number().int().min(1).max(100).default(10),
+  limit: z.coerce.number().int().min(1).max(1000).default(10),
 });
 
 export type GetTransactionsQuery = z.infer<typeof getTransactionsQuerySchema>;
