@@ -8,6 +8,7 @@ import wishlistRoutes from "./modules/wishlist/wishlist.route";
 import cartRoutes from "./modules/cart/cart.route";
 import userRoutes from "./modules/user/user.route";
 import orderRoutes from "./modules/order/order.route";
+import slideRoutes from "./modules/slide/slide.route";
 import orderStatusRoutes from "./modules/order-status/order-status.route";
 import transactionRoutes from "./modules/transaction/transaction.route";
 import { errorMiddleware } from "./middlewares/error.middleware";
@@ -36,6 +37,7 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/slides", slideRoutes);
 app.use("/api/order-status", orderStatusRoutes);
 app.use("/api/transactions", transactionRoutes);
 
