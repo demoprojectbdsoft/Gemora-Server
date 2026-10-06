@@ -9,7 +9,7 @@ const slideSchema = new Schema(
     subtitle: { type: String, required: true },
     tagline: { type: String, required: true },
 
-    targetDate: { type: Date, required: true }, // countdown end time
+    targetDate: { type: Date }, // optional fallback, derived from product.offerEndDate
 
     order: { type: Number, default: 0 },        // display order in the tab bar
     isActive: { type: Boolean, default: true },

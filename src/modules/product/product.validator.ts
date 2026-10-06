@@ -28,6 +28,7 @@ export const createProductSchema = z.object({
   description: z.string().optional(),
   specifications: z.record(z.string(), z.string()).optional(),
   isFeatured: z.boolean().optional(),
+  offerEndDate: z.coerce.date().optional().nullable(),
 });
 
 export const updateProductSchema = createProductSchema.partial();

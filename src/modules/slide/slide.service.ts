@@ -11,6 +11,15 @@ interface GetSlidesFilter {
 // Product fields (name/price/image/href) are NEVER stored on the slide —
 // they're read live from the product every time, so they can't go stale.
 function formatSlide(slide: any, product: any) {
+  const isOfferExpired =
+    product?.offerEndDate && new Date(product.offerEndDate).getTime() <= Date.now();
+  const effectivePrice = isOfferExpired && product?.originalPrice
+    ? product.originalPrice
+    : (product?.price ?? 0);
+  const effectiveOriginalPrice = isOfferExpired
+    ? product?.originalPrice
+    : product?.originalPrice;
+
   return {
     id: slide._id.toString(),
     productId: product?._id?.toString() ?? slide.productId?.toString(),
@@ -18,13 +27,13 @@ function formatSlide(slide: any, product: any) {
     tabTitle: slide.tabTitle,
     subtitle: slide.subtitle,
     tagline: slide.tagline,
-    targetDate: slide.targetDate,
+    targetDate: product?.offerEndDate ?? slide.targetDate,
     order: slide.order,
     isActive: slide.isActive,
 
     productName: product?.title ?? "",
-    price: product?.price ?? 0,
-    originalPrice: product?.originalPrice,
+    price: effectivePrice,
+    originalPrice: effectiveOriginalPrice,
     image: product?.image ?? "",
     href: product?.slug ? `/shop/${product.slug}` : "",
   };
@@ -33,6 +42,11 @@ function formatSlide(slide: any, product: any) {
 export async function createSlide(data: CreateSlideInput) {
   const product = await Product.findById(data.productId);
   if (!product) throw new ApiError(404, "Product not found");
+
+  if (data.targetDate) {
+    product.offerEndDate = data.targetDate;
+    await product.save();
+  }
 
   const slide = await Slide.create(data);
   return formatSlide(slide, product);
@@ -55,6 +69,14 @@ export async function updateSlide(id: string, data: UpdateSlideInput) {
   if (data.productId) {
     const product = await Product.findById(data.productId);
     if (!product) throw new ApiError(404, "Product not found");
+  }
+
+  const existingSlide = await Slide.findById(id);
+  if (!existingSlide) throw new ApiError(404, "Slide not found");
+
+  const productIdToUpdate = data.productId || existingSlide.productId;
+  if (data.targetDate && productIdToUpdate) {
+    await Product.findByIdAndUpdate(productIdToUpdate, { offerEndDate: data.targetDate });
   }
 
   const slide = await Slide.findByIdAndUpdate(id, data, { new: true }).populate("productId");

@@ -28,6 +28,7 @@ const productSchema = new Schema(
     description: { type: String },
     specifications: { type: Map, of: String },
     isFeatured: { type: Boolean, default: false },
+    offerEndDate: { type: Date },
   },
   { timestamps: true }
 );

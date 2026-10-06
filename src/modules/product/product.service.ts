@@ -36,10 +36,14 @@ function formatProduct(product: any, ratingsMap?: Map<string, any>) {
   const id = obj._id?.toString() ?? obj.id;
   const stat = ratingsMap?.get(id);
 
-  // Calculate discount% from prices if not already stored
+  const isOfferExpired = obj.offerEndDate && new Date(obj.offerEndDate).getTime() <= Date.now();
+  const effectivePrice = isOfferExpired && obj.originalPrice ? obj.originalPrice : obj.price;
+  const effectiveOriginalPrice = isOfferExpired ? obj.originalPrice : obj.originalPrice;
+
+  // Calculate discount% from prices if not expired
   const discountPercentage =
-    obj.originalPrice && obj.originalPrice > obj.price
-      ? Math.round(((obj.originalPrice - obj.price) / obj.originalPrice) * 100)
+    !isOfferExpired && effectiveOriginalPrice && effectiveOriginalPrice > effectivePrice
+      ? Math.round(((effectiveOriginalPrice - effectivePrice) / effectiveOriginalPrice) * 100)
       : undefined;
 
   // Resolve category label from populated ref or specifications fallback
@@ -48,6 +52,8 @@ function formatProduct(product: any, ratingsMap?: Map<string, any>) {
   return {
     ...obj,
     id,
+    price: effectivePrice,
+    originalPrice: effectiveOriginalPrice,
     categories: categoryName ? [categoryName] : [],
     discountPercentage,
     rating: stat ? Math.round(stat.avgRating * 10) / 10 : (obj.rating ?? 0),

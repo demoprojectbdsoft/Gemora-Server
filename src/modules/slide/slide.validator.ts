@@ -8,7 +8,7 @@ export const createSlideSchema = z.object({
   tabTitle: z.string().min(1, "Tab title is required"),
   subtitle: z.string().min(1, "Subtitle is required"),
   tagline: z.string().min(1, "Tagline is required"),
-  targetDate: z.coerce.date(),
+  targetDate: z.coerce.date().optional(),
   order: z.number().int().optional(),
   isActive: z.boolean().optional(),
 });
