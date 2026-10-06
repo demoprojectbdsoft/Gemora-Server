@@ -1,0 +1,19 @@
+import { z } from "zod";
+
+const objectId = z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId");
+
+export const createSlideSchema = z.object({
+  ownerId: objectId,
+  productId: objectId,
+  tabTitle: z.string().min(1, "Tab title is required"),
+  subtitle: z.string().min(1, "Subtitle is required"),
+  tagline: z.string().min(1, "Tagline is required"),
+  targetDate: z.coerce.date(),
+  order: z.number().int().optional(),
+  isActive: z.boolean().optional(),
+});
+
+export const updateSlideSchema = createSlideSchema.partial();
+
+export type CreateSlideInput = z.infer<typeof createSlideSchema>;
+export type UpdateSlideInput = z.infer<typeof updateSlideSchema>;
