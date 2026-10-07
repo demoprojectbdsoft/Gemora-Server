@@ -23,9 +23,6 @@ export async function createOrder(data: CreateOrderInput) {
     const product = await Product.findById(item.productId);
     if (!product) throw new ApiError(404, `Product not found: ${item.productId}`);
 
-    if (product.stockQuantity != null && product.stockQuantity < item.quantity) {
-      throw new ApiError(400, `Insufficient stock for ${product.title}`);
-    }
 
     subtotal += product.price * item.quantity;
     orderItems.push({
@@ -63,9 +60,6 @@ export async function createOrder(data: CreateOrderInput) {
 
   await logOrderStatus(order._id.toString(), "processing");
 
-  for (const item of data.items) {
-    await Product.findByIdAndUpdate(item.productId, { $inc: { stockQuantity: -item.quantity } });
-  }
 
   await Cart.deleteMany({ userId: data.userId });
 

@@ -16,8 +16,7 @@ const productSchema = new Schema(
     image: { type: String, required: true },           // main image
     additionalImages: [{ type: String }],               // gallery
 
-    inStock: { type: Boolean, default: true },
-    stockQuantity: { type: Number },
+
 
     rating: { type: Number },
     reviewCount: { type: Number },

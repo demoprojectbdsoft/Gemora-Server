@@ -19,8 +19,7 @@ export const createProductSchema = z.object({
   image: z.string().url("Image must be a valid URL"),
   additionalImages: z.array(z.string().url()).optional(),
 
-  inStock: z.boolean().optional(),
-  stockQuantity: z.number().int().nonnegative().optional(),
+
 
   badges: z.array(z.string()).optional(),  // plain strings, matches current form
 
@@ -51,11 +50,7 @@ export const getProductsQuerySchema = z.object({
       (v) => (v === "true" || v === true ? true : v === "false" || v === false ? false : undefined),
       z.boolean().optional()
     ),
-  inStock: z
-    .preprocess(
-      (v) => (v === "true" || v === true ? true : v === "false" || v === false ? false : undefined),
-      z.boolean().optional()
-    ),
+
   sort: z.string().optional(),
   page: z.coerce.number().int().positive().default(1),
   limit: z.coerce.number().int().positive().max(1000).default(20),

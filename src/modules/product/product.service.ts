@@ -80,7 +80,7 @@ export async function createProduct(data: CreateProductInput) {
 }
 
 export async function getProducts(query: GetProductsQuery) {
-  const { category, subCategory, search, minPrice, maxPrice, isFeatured, inStock, sort, page, limit } = query;
+  const { category, subCategory, search, minPrice, maxPrice, isFeatured, sort, page, limit } = query;
   const conditions: any[] = [];
 
   // 1. Filter by category (by slug or name)
@@ -159,9 +159,7 @@ export async function getProducts(query: GetProductsQuery) {
     conditions.push({ badges: badgeRegex });
   }
 
-  // 5. Boolean filters
   if (isFeatured !== undefined) conditions.push({ isFeatured });
-  if (inStock !== undefined) conditions.push({ inStock });
 
   const filter = conditions.length > 0 ? { $and: conditions } : {};
 
